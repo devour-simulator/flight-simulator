@@ -1,6 +1,7 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const damp=(current,target,response,dt)=>current+(target-current)*(1-Math.exp(-response*dt));
 let MAX_ALTITUDE_FT=41000;const PLAYER_GROUND_Y=3.69;
 const ui={world:$('#world'),start:$('#start'),toast:$('#toast'),overhead:$('#overhead'),cdu:$('#cdu'),pfd:$('#pfd'),nd:$('#nd'),eicas:$('#eicas'),throttle:$('#throttle'),flaps:$('#flaps'),speedbrake:$('#speedbrake'),gear:$('#gearBtn'),sound:$('#soundBtn'),externalRadar:$('#externalRadar'),crash:$('#crashScreen')};
 const aircraftProfiles={
