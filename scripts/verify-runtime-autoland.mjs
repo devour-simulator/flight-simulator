@@ -59,6 +59,7 @@ const state = {
   gearOverspeedTime: 0, gearWarnUntil: 0, ias: activeAircraft.id === 'Q400' ? 220 : 250, altitude: initialAltitude,
   radioAlt: initialAltitude, vs: 0, heading: 0, pitch: 3, flightPathAngle: 0,
   roll: 0, rudder: 0, aoa: 3, criticalAoa: 15, stallSeverity: 0,
+  temperature: 15, cg: 25, trim: 5, fmcPlan: null,
   x: 0, y: 3.69 + initialAltitude * .3048, z: 2050, weight: activeAircraft.id === 'Q400' ? 29000 : 65000,
   onGround: false, airborne: true, landingRollout: null, flightSeconds: 0,
   offPavementTime: 0, offPavementNotified: false, ceilingWarned: false,
@@ -77,7 +78,7 @@ const state = {
 const keys = {};
 const ui = { speedbrake: element(), flaps: element(), throttle: element(), gear: element() };
 const aircraft = { position: { set: noop }, rotation: { order: '', set: noop } };
-const activeWeather = { wind: 0, gust: 0, friction: 1 };
+const activeWeather = { wind: 0, gust: 0, friction: 1, night: false, lightning: false };
 const weatherProfiles = {};
 const obstacles = [];
 const saved = { hours: 0, cycles: 0, flights: 0, routes: [], bestLanding: 0 };
@@ -110,7 +111,7 @@ const makeFlightPhysics = new Function(
   'crash', 'showLandingReport', 'updateCurrentAirportLabel', 'saveCareer',
   'maybeFailure', 'onAirportPavement', 'performance', 'collisionWarningTimer',
   'displayDistanceKm', 'damp', 'warningTimer', 'engineGain', 'engineNoiseGain', 'engineOsc',
-  'pointOnFinal',
+  'pointOnFinal', 'aircraftSystemStatus', 'readGamepad', 'disconnectAutopilot', 'updateFlightExperience', 'speakCallout',
   `${flightPhysicsSource}; return flightPhysics;`,
 );
 const flightPhysics = makeFlightPhysics(
@@ -120,7 +121,7 @@ const flightPhysics = makeFlightPhysics(
   nearestRunway, crash, data => reports.push(data), noop, noop, noop,
   () => true, { now: () => state.flightSeconds * 1000 }, 0, meters => meters * 12 / 1000, damp,
   0, null, null, null,
-  runtimePointOnFinal,
+  runtimePointOnFinal, () => ({ transfer: true, hydA: true, hydB: true }), () => null, noop, noop, noop,
 );
 
 const DT = .04;
