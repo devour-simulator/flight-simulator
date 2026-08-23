@@ -325,6 +325,7 @@ function setReady(){Object.assign(state,{battery:true,groundPower:false,apuMaste
 function refreshChecklist(){const values={battery:state.battery,apu:state.apuRunning&&state.apuGen,fuel:state.fuelPumps&&state.beacon,air:state.bleed&&!state.packs,engine2:state.engineData[1].phase==='STABLE',engine1:state.engineData[0].phase==='STABLE',generators:state.gen1&&state.gen2,hydraulics:state.hydraulics&&state.packs};$$('.check').forEach(row=>{const ok=values[row.dataset.check];row.classList.toggle('done',ok);row.querySelector('b').textContent=ok?'OK':'OFF'})}
 async function enterFullscreen(){if(document.fullscreenElement)return;try{await document.documentElement.requestFullscreen()}catch{toast('浏览器阻止了自动全屏，请点击右上角“全屏”')}}
 function begin(quick){initAudio();loadGlobalNavigationDatabase();applyAircraftProfile($('#aircraftSelect').value);refuelAircraft(state.fuel);difficulty=$('#difficultySelect').value;applyWeather(pendingMission?.weather||$('#weatherSelect').value);state.departureAirport=state.currentAirport;state.activeMission=pendingMission;state.operationalEventTimer=0;state.nextOperationalEvent=0;state.replayFrames=[];state.replaySampleTimer=0;state.running=true;beginFlightMetrics();if(state.activeMission?.fuelLimit)refuelAircraft(Math.min(state.fuel,state.activeMission.fuelLimit[activeAircraft.id]));updateMissionBadge();resetATC(quick||difficulty==='simple');ui.start.classList.add('hidden');enterFullscreen();if(quick||difficulty==='simple')setReady();toast(state.activeMission?`任务开始 · ${state.activeMission.name} · ${state.activeMission.origin} → ${state.activeMission.destination}`:quick?`${activeAircraft.short} 已在跑道就绪 · 请向塔台申请起飞`:difficulty==='simple'?'简单模式已自动完成启动 · 请向塔台申请起飞':'从顶板开始：BATTERY → GROUND POWER → IRS → APU');}
+function setTutorialExternalView(external){state.external=external;document.body.classList.toggle('view-external',external);$('#viewBtn').textContent=external?'驾驶舱视角':'外部视角'}
 
 const tutorialSteps=[
   {title:'打开顶板',text:'737 的冷舱启动从头顶面板开始。这里负责电源、燃油、引气、液压和灯光。',target:'#overheadBtn',done:()=>ui.overhead.classList.contains('open'),prepare:()=>ui.overhead.classList.remove('open')},
@@ -352,12 +353,17 @@ const tutorialSteps=[
   {title:'取得 ATC 起飞许可',text:'起飞前必须使用右侧 ATC：请求推出/滑行，复诵滑行许可，到达塔台步骤后请求起飞，最后复诵并接受许可。按钮回复一次后会消失；只有显示“可以起飞”时才能抬轮。',target:'#atcPanel',done:()=>state.atcPhase==='cleared',autoAdvance:false,prepare:()=>ui.overhead.classList.remove('open')},
   {title:'起飞',text:'把 THRUST 推到 TO/GA，Q 向左、E 向右保持跑道方向。速度达到 100 节后按一下 W 发出拉起指令，飞机会缓慢抬起前轮，并在约 112–120 节平顺离地。离地后会自动保持约 10° 爬升；正上升后按 G 收起落架。',target:'#throttle',done:()=>state.airborne&&state.altitude>100},
   {title:'保持爬升姿态',text:'把机头保持在约 10–15°，不要持续拉到垂直。观察 PFD 右侧高度和 V/S，保持稳定正上升。',target:'#pfdPanel',done:()=>state.altitude>1500},
-  {title:'爬升到安全高度',text:'继续爬升到 10,000 英尺（约 3,000 米）。途中注意 ND 上的其他飞机、鸟群和山体目标，必要时转弯避让。',target:'#ndPanel',done:()=>state.altitude>=10000}
+  {title:'爬升到安全高度',text:'继续爬升到 10,000 英尺（约 3,000 米）。途中注意 ND 上的其他飞机、鸟群和山体目标，必要时转弯避让。',target:'#ndPanel',done:()=>state.altitude>=10000,prepare:()=>setTutorialExternalView(false)},
+  {title:'切换到外部视角',text:'点击右上角“外部视角”。这里不仅能观察飞机，还能直接使用完整的航路、目标速度、巡航高度和自动着陆控制。',target:'#viewBtn',done:()=>state.external,prepare:()=>closePopups()},
+  {title:'设置目的地和巡航目标',text:'先选择目的机场与跑道，再填写目标速度（KT）和巡航高度（FT）。这些是航路巡航目标，不是起飞或接地速度；飞行中修改也会立即生效。',target:'.external-ap-grid',done:()=>true,autoAdvance:false,prepare:()=>setTutorialExternalView(true)},
+  {title:'接通自动飞行并降落',text:'点击“自动飞行并降落”。系统会接通自动油门、CMD、LNAV 与 VNAV，沿航路飞行并自动管理收轮、下降、进近、放轮和襟翼。若仍在地面，必须先取得 ATC 起飞许可。',target:'#autoLandBtn',done:()=>!!state.autoLand&&state.ap.ap,prepare:()=>setTutorialExternalView(true)},
+  {title:'看懂设定值与执行值',text:'“玩家设定”是你输入的巡航目标；“当前执行”才是飞机此刻实际追踪的目标。遇到山体时会暂时采用更高的安全高度，进入下降或最终进近后也会自动降低高度和速度，这不是设定失效。',target:'#externalTargetReadout',done:()=>true,autoAdvance:false,prepare:()=>setTutorialExternalView(true)},
+  {title:'完成自动进近与着陆',text:'继续观察状态栏：CLIMB → CRUISE → DESCENT → APPROACH → FLARE。最终进近由 3° 下滑道和安全着陆速度接管，主轮会先接地；停稳后会显示完整航班与着陆评分。',target:'#externalApStatus',done:()=>state.onGround&&state.currentAirport!=='YHI',prepare:()=>setTutorialExternalView(true)}
 ];
-const closePopups=()=>{ui.overhead.classList.remove('open');ui.cdu.classList.remove('open');$('#systemsPanel').classList.remove('open');$('#devicePanel').classList.remove('open')};
+const closePopups=()=>{ui.overhead.classList.remove('open');ui.cdu.classList.remove('open');$('#systemsPanel').classList.remove('open');$('#devicePanel').classList.remove('open');setTutorialExternalView(false)};
 const panelTutorialSteps=[
   {title:'欢迎来到 737-800 驾驶舱',text:'这次导览只讲面板，不要求你操作。高亮区域就是当前讲解对象；看完后点击“下一步”。',target:'#mainPanel',prepare:closePopups},
-  {title:'MCP 模式控制面板',text:'MCP 用来选择自动驾驶的速度、航向和高度。IAS、HDG、ALTITUDE 是目标值；LNAV/VNAV 管理航路与垂直剖面，CMD A 接通自动驾驶。',target:'#mcpPanel',prepare:closePopups},
+  {title:'MCP 模式控制面板',text:'MCP 用来选择自动驾驶的速度、航向和高度。IAS、HDG、ALTITUDE 是目标值；LNAV/VNAV 管理航路与垂直剖面，CMD A 接通自动驾驶。外部视角修改速度和巡航高度时，这里的执行目标也会同步变化。',target:'#mcpPanel',prepare:closePopups},
   {title:'PFD 主飞行显示器',text:'左侧数字是飞机速度 IAS，单位是节（KT）；右侧是高度。中央蓝棕地平仪显示俯仰和滚转，顶部绿色文字显示自动飞行模式。',target:'#pfdPanel',prepare:closePopups},
   {title:'ND 导航与防撞显示',text:'白色飞机符号是自己；白色轮廓是跑道；紫线和菱形是航路与活动航点；黄色方块是其他飞机，红点是鸟群，棕色三角是山体或建筑。GS 是地速，TRK 是航迹。',target:'#ndPanel',prepare:closePopups},
   {title:'发动机显示',text:'这里的大数字约 60 或 61 是发动机 N1 转速百分比，不是飞机速度。真正速度请看左侧 PFD 的 IAS。下面还能看到 EGT、燃油、襟翼和起落架状态。',target:'#eicasPanel',prepare:closePopups},
@@ -369,6 +375,8 @@ const panelTutorialSteps=[
   {title:'中央操纵台与脚蹬',text:'Pedestal 包含 VHF 无线电、安定面配平和应答机。下方脚蹬对应方向舵；摇杆外设接入后也会驱动这些操纵。',target:'.pedestal',prepare:closePopups},
   {title:'飞机系统状态页',text:'系统页实时显示 AC/DC 汇流条、液压压力、燃油压力、引气、空调、重量、重心和温度。关闭电源或液压会真实影响仪表与自动驾驶。',target:'#systemsBtn',prepare:()=>{$('#systemsPanel').classList.add('open');ui.overhead.classList.remove('open');ui.cdu.classList.remove('open')}},
   {title:'CDU / FMC',text:'CDU 现在可选择 SID、STAR、ILS/RNAV 进近，输入巡航高度、零燃油重量与备份油量，并生成带避障进近段的 LNAV/VNAV 航路。',target:'#cdu',prepare:()=>{$('#systemsPanel').classList.remove('open');ui.overhead.classList.remove('open');ui.cdu.classList.add('open')}},
+  {title:'外部视角自动飞行面板',text:'这里可以选择目的机场和跑道，设置巡航速度与高度，并接通或断开自动驾驶。点击“自动飞行并降落”会执行完整航路和自动进近；飞行中也能随时修改目标。',target:'#externalAp',prepare:()=>{closePopups();setTutorialExternalView(true)}},
+  {title:'玩家设定与当前执行',text:'上行“玩家设定”保存你的巡航目标，下行“当前执行”显示飞机此刻真正追踪的速度和高度。地形避障、下降剖面和最终进近接管时会用黄色明确说明原因。',target:'#externalTargetReadout',prepare:()=>{closePopups();setTutorialExternalView(true)}},
   {title:'导览完成',text:'现在你已经知道速度在哪里看，也能分清 MCP、飞行仪表、发动机屏、中央操纵区、顶板和 CDU。接下来建议打开“启动教学”完成一次冷舱启动。',target:'#tutorialBtn',prepare:closePopups}
 ];
 function activeTutorialSteps(){return tutorialKind==='panels'?panelTutorialSteps:tutorialSteps}
