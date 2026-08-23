@@ -107,7 +107,7 @@ function crash(reason) { state.crashed = true; crashReason = reason; }
 const makeFlightPhysics = new Function(
   'THREE', 'state', 'activeAircraft', 'keys', 'ui', '$', 'document', 'aircraft',
   'activeWeather', 'weatherProfiles', 'obstacles', 'saved', 'MAX_ALTITUDE_FT',
-  'PLAYER_GROUND_Y', 'runwayApproachGeometry', 'autopilotTerrainThreat',
+  'PLAYER_GROUND_Y', 'WORLD_DISTANCE_SCALE', 'runwayApproachGeometry', 'autopilotTerrainThreat',
   'setGear', 'toast', 'warningTone', 'beep', 'unlockAchievement', 'nearestRunway',
   'crash', 'showLandingReport', 'updateCurrentAirportLabel', 'saveCareer',
   'maybeFailure', 'onAirportPavement', 'performance', 'collisionWarningTimer',
@@ -117,7 +117,7 @@ const makeFlightPhysics = new Function(
 );
 const flightPhysics = makeFlightPhysics(
   THREE, state, activeAircraft, keys, ui, $, document, aircraft,
-  activeWeather, weatherProfiles, obstacles, saved, 41000, 3.69,
+  activeWeather, weatherProfiles, obstacles, saved, 41000, 3.69, 12,
   runwayApproachGeometry, () => null, setGear, noop, noop, noop, noop,
   nearestRunway, crash, data => reports.push(data), noop, noop, noop,
   () => true, { now: () => state.flightSeconds * 1000 }, 0, meters => meters * 12 / 1000, damp,
