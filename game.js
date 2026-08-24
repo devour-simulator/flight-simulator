@@ -2,7 +2,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const damp=(current,target,response,dt)=>current+(target-current)*(1-Math.exp(-response*dt));
-let MAX_ALTITUDE_FT=41000;const PLAYER_GROUND_Y=3.69,WORLD_DISTANCE_SCALE=12,displayDistanceKm=meters=>meters*WORLD_DISTANCE_SCALE/1000;
+let MAX_ALTITUDE_FT=41000;const PLAYER_GROUND_Y=3.69,WORLD_DISTANCE_SCALE=8,displayDistanceKm=meters=>meters*WORLD_DISTANCE_SCALE/1000;
 const ui={world:$('#world'),start:$('#start'),toast:$('#toast'),overhead:$('#overhead'),cdu:$('#cdu'),pfd:$('#pfd'),nd:$('#nd'),eicas:$('#eicas'),throttle:$('#throttle'),flaps:$('#flaps'),speedbrake:$('#speedbrake'),gear:$('#gearBtn'),sound:$('#soundBtn'),externalRadar:$('#externalRadar'),crash:$('#crashScreen')};
 const aircraftProfiles={
   B738:{id:'B738',name:'Boeing 737-800',short:'B737-800',type:'重型喷气客机',description:'沉稳、惯性大、巡航快；起飞和进近速度较高。',price:0,operatingCost:2400,capacity:174,pitchResponse:1,rollResponse:1,yawResponse:1,thrust:1,drag:1,lift:1,rotateSpeed:112,controlSpeed:125,criticalAoa:15,ceiling:41000,fuelBurn:1,approachSpeed:137,gearLimit:270,passengerOverspeed:340,maxSpeed:520,scale:[.92,.92,.92]},
@@ -48,18 +48,18 @@ for(const x of[-330,0,330])addAirfieldLightSet(runway,runwayLightLayout(x,-900,6
 const skyOrb=new THREE.Mesh(new THREE.SphereGeometry(90,24,16),new THREE.MeshBasicMaterial({color:0xfff1b4,fog:false}));scene.add(skyOrb);const moon=new THREE.Mesh(new THREE.SphereGeometry(185,48,32),new THREE.MeshBasicMaterial({map:makeMoonTexture(),fog:false}));moon.visible=false;scene.add(moon);const moonHalo=new THREE.Sprite(new THREE.SpriteMaterial({map:makeRadialTexture('#dceaff'),color:0xc9ddff,transparent:true,opacity:.42,depthWrite:false,depthTest:false,fog:false,blending:THREE.AdditiveBlending}));moonHalo.scale.set(760,760,1);moonHalo.visible=false;scene.add(moonHalo);const aircraftGlowTexture=makeRadialTexture();
 
 const airports=[
-  {code:'YHI',name:'云海国际机场',region:'东洲',map:[55,48],unlock:0,x:0,z:-900,runways:[{id:'18C',heading:180,x:0,z:-900},{id:'18L',heading:180,x:-330,z:-900},{id:'18R',heading:180,x:330,z:-900}]},
-  {code:'LGA',name:'临港国际机场',region:'海湾',map:[67,58],unlock:0,x:18000,z:-26000,runways:[{id:'09',heading:90,x:18000,z:-26000},{id:'27',heading:270,x:18000,z:-26000}]},
-  {code:'SMA',name:'山岚国际机场',region:'高原',map:[43,63],unlock:0,x:-23000,z:-42000,runways:[{id:'04',heading:40,x:-23000,z:-42000},{id:'22',heading:220,x:-23000,z:-42000}]},
-  {code:'EAS',name:'东海国际机场',region:'东海岸',map:[79,45],unlock:2,x:52000,z:-18000,runways:[{id:'12',heading:120,x:52000,z:-18000},{id:'30',heading:300,x:52000,z:-18000}]},
-  {code:'NPL',name:'北辰国际机场',region:'北境',map:[58,25],unlock:4,x:38000,z:-65000,runways:[{id:'18',heading:180,x:38000,z:-65000},{id:'36',heading:360,x:38000,z:-65000}]},
-  {code:'WDS',name:'西陆国际机场',region:'西洲',map:[25,52],unlock:6,x:-60000,z:-28000,runways:[{id:'08',heading:80,x:-60000,z:-28000},{id:'26',heading:260,x:-60000,z:-28000}]},
-  {code:'ISL',name:'远洋群岛机场',region:'群岛',map:[86,76],unlock:8,x:70000,z:-80000,runways:[{id:'05',heading:50,x:70000,z:-80000},{id:'23',heading:230,x:70000,z:-80000}]},
-  {code:'ALP',name:'雪峰国际机场',region:'雪山',map:[30,22],unlock:10,x:-70000,z:-90000,runways:[{id:'14',heading:140,x:-70000,z:-90000},{id:'32',heading:320,x:-70000,z:-90000}]}
+  {code:'YHI',name:'云海国际机场',region:'东洲',map:[50,50],unlock:0,x:0,z:-900,runways:[{id:'18C',heading:180,x:0,z:-900},{id:'18L',heading:180,x:-330,z:-900},{id:'18R',heading:180,x:330,z:-900}]},
+  {code:'LGA',name:'临港国际机场',region:'海湾',map:[68,64],unlock:0,x:35000,z:-50000,runways:[{id:'09',heading:90,x:35000,z:-50000},{id:'27',heading:270,x:35000,z:-50000}]},
+  {code:'SMA',name:'山岚国际机场',region:'高原',map:[34,70],unlock:0,x:-52000,z:-65000,runways:[{id:'04',heading:40,x:-52000,z:-65000},{id:'22',heading:220,x:-52000,z:-65000}]},
+  {code:'EAS',name:'东海国际机场',region:'东海岸',map:[84,42],unlock:2,x:80000,z:-35000,runways:[{id:'12',heading:120,x:80000,z:-35000},{id:'30',heading:300,x:80000,z:-35000}]},
+  {code:'NPL',name:'北辰国际机场',region:'北境',map:[60,18],unlock:4,x:45000,z:-100000,runways:[{id:'18',heading:180,x:45000,z:-100000},{id:'36',heading:360,x:45000,z:-100000}]},
+  {code:'WDS',name:'西陆国际机场',region:'西洲',map:[14,54],unlock:6,x:-105000,z:-40000,runways:[{id:'08',heading:80,x:-105000,z:-40000},{id:'26',heading:260,x:-105000,z:-40000}]},
+  {code:'ISL',name:'远洋群岛机场',region:'群岛',map:[91,82],unlock:8,x:120000,z:-110000,runways:[{id:'05',heading:50,x:120000,z:-110000},{id:'23',heading:230,x:120000,z:-110000}]},
+  {code:'ALP',name:'雪峰国际机场',region:'雪山',map:[22,14],unlock:10,x:-120000,z:-125000,runways:[{id:'14',heading:140,x:-120000,z:-125000},{id:'32',heading:320,x:-120000,z:-125000}]}
 ];
 // Public-domain airport/runway subset generated from OurAirports. The local
-// simulation uses a 12:1 horizontal compression so intercontinental routes
-// remain possible while retaining real latitude/longitude relationships.
+// simulation uses an 8:1 horizontal compression so airports remain clearly
+// separated while intercontinental routes are still practical in a browser.
 const worldNavRecords=[
   ['ZSPD','上海浦东国际机场','CN',31.1434,121.805,13,[['17L',162,13123],['16L',162,12467]]],
   ['ZBAA','北京首都国际机场','CN',40.077349,116.596702,116,[['01',353,12467],['18L',173,12467]]],
@@ -89,7 +89,7 @@ const worldNavRecords=[
   ['SAEZ','布宜诺斯艾利斯埃塞萨机场','AR',-34.8222,-58.5358,67,[['11',102,10827],['17',164,10187]]],
   ['FAOR','约翰内斯堡坦博国际机场','ZA',-26.140081,28.246801,5558,[['03L',14,14495],['03R',14,11155]]]
 ];
-const WORLD_NAV_ORIGIN={lat:31.1434,lon:121.805},WORLD_DEGREE_UNITS=9250,WORLD_NAV_OFFSET_X=15000;
+const WORLD_NAV_ORIGIN={lat:31.1434,lon:121.805},WORLD_DEGREE_UNITS=13875,WORLD_NAV_OFFSET_X=26000;
 function projectWorldCoordinate(lat,lon){const deltaLon=((lon-WORLD_NAV_ORIGIN.lon+540)%360)-180,cos=Math.cos(WORLD_NAV_ORIGIN.lat*Math.PI/180);return{x:WORLD_NAV_OFFSET_X+deltaLon*cos*WORLD_DEGREE_UNITS,z:-900-(lat-WORLD_NAV_ORIGIN.lat)*WORLD_DEGREE_UNITS}}
 function worldCoordinateFromPosition(x,z){const cos=Math.cos(WORLD_NAV_ORIGIN.lat*Math.PI/180),lat=WORLD_NAV_ORIGIN.lat-(z+900)/WORLD_DEGREE_UNITS,lon=((WORLD_NAV_ORIGIN.lon+(x-WORLD_NAV_OFFSET_X)/(WORLD_DEGREE_UNITS*cos)+540)%360)-180;return{lat:THREE.MathUtils.clamp(lat,-85,85),lon}}
 for(const [code,name,country,lat,lon,elevationFt,runwayData] of worldNavRecords){const pos=projectWorldCoordinate(lat,lon),map=[(lon+180)/3.6,(90-lat)/1.8];airports.push({code,name,region:country,map,unlock:0,real:true,lat,lon,elevationFt,x:pos.x,z:pos.z,runways:runwayData.map(([id,heading,lengthFt])=>({id,heading,lengthFt,x:pos.x,z:pos.z}))})}

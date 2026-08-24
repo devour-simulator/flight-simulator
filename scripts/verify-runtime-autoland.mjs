@@ -27,10 +27,10 @@ const aircraftProfiles = {
   Q400: { id: 'Q400', short: 'Q400', approachSpeed: 112, controlSpeed: 94, criticalAoa: 17, pitchResponse: 1.35, rollResponse: 1.55, yawResponse: 1.45, thrust: .82, drag: 1.12, lift: 1.24, fuelBurn: .55, rotateSpeed: 88, maxSpeed: 360, ceiling: 25000, gearLimit: 250 },
 };
 const airportData = {
-  LGA: [18000, -26000, [90, 270]], SMA: [-23000, -42000, [40, 220]],
-  EAS: [52000, -18000, [120, 300]], NPL: [38000, -65000, [180, 360]],
-  WDS: [-60000, -28000, [80, 260]], ISL: [70000, -80000, [50, 230]],
-  ALP: [-70000, -90000, [140, 320]],
+  LGA: [35000, -50000, [90, 270]], SMA: [-52000, -65000, [40, 220]],
+  EAS: [80000, -35000, [120, 300]], NPL: [45000, -100000, [180, 360]],
+  WDS: [-105000, -40000, [80, 260]], ISL: [120000, -110000, [50, 230]],
+  ALP: [-120000, -125000, [140, 320]],
 };
 const airportCode = process.argv[2] || 'LGA';
 const [runwayX, runwayZ, runwayHeadings] = airportData[airportCode] || airportData.LGA;
@@ -117,10 +117,10 @@ const makeFlightPhysics = new Function(
 );
 const flightPhysics = makeFlightPhysics(
   THREE, state, activeAircraft, keys, ui, $, document, aircraft,
-  activeWeather, weatherProfiles, obstacles, saved, 41000, 3.69, 12,
+  activeWeather, weatherProfiles, obstacles, saved, 41000, 3.69, 8,
   runwayApproachGeometry, () => null, setGear, noop, noop, noop, noop,
   nearestRunway, crash, data => reports.push(data), noop, noop, noop,
-  () => true, { now: () => state.flightSeconds * 1000 }, 0, meters => meters * 12 / 1000, damp,
+  () => true, { now: () => state.flightSeconds * 1000 }, 0, meters => meters * 8 / 1000, damp,
   0, null, null, null,
   runtimePointOnFinal, () => ({ transfer: true, hydA: true, hydB: true }), () => null, noop, noop, noop, () => true,
 );
