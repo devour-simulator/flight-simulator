@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 
 const source = readFileSync(new URL('../game.js', import.meta.url), 'utf8');
-const start = source.indexOf('function flightPhysics(dt)');
+const start = source.indexOf('function updateQ400Powerplant(dt');
 const end = source.indexOf('\nfunction updateAutopilotMotionGuard', start);
 if (start < 0 || end < 0) throw new Error('Unable to extract flightPhysics from game.js');
 const flightPhysicsSource = source.slice(start, end);
@@ -60,7 +60,9 @@ const state = {
   gearOverspeedTime: 0, gearWarnUntil: 0, ias: activeAircraft.id === 'Q400' ? 220 : 250, altitude: initialAltitude,
   radioAlt: initialAltitude, vs: 0, heading: 0, pitch: 3, flightPathAngle: 0,
   roll: 0, rudder: 0, aoa: 3, criticalAoa: 15, stallSeverity: 0,
-  temperature: 15, cg: 25, trim: 5, fmcPlan: null,
+  temperature: 15, cg: 25, trim: 5, fmcPlan: null, conditionLever: 100,
+  propRpm: 1020, bladePitch: 35, torque: activeAircraft.id === 'Q400' ? 70 : 0,
+  itt: 650, nh: 90, nl: 85, icingLevel: 0, tas: 0, groundSpeed: 0, engineOverlimitTime: 0,
   x: 0, y: 3.69 + initialAltitude * .3048, z: 2050, weight: activeAircraft.id === 'Q400' ? 29000 : 65000,
   onGround: false, airborne: true, landingRollout: null, flightSeconds: 0,
   offPavementTime: 0, offPavementNotified: false, ceilingWarned: false,
@@ -79,10 +81,10 @@ const state = {
 const keys = {};
 const ui = { speedbrake: element(), flaps: element(), throttle: element(), gear: element() };
 const aircraft = { position: { set: noop }, rotation: { order: '', set: noop } };
-const activeWeather = { wind: 0, gust: 0, friction: 1, night: false, lightning: false };
+const activeWeather = { wind: 0, gust: 0, rain: 0, friction: 1, night: false, lightning: false };
 const weatherProfiles = {};
 const obstacles = [];
-const saved = { hours: 0, cycles: 0, flights: 0, routes: [], bestLanding: 0 };
+const saved = { hours: 0, cycles: 0, flights: 0, routes: [], bestLanding: 0, aircraftCondition: { B738: 100, Q400: 100 } };
 const reports = [];
 let crashReason = '';
 
@@ -117,7 +119,7 @@ const makeFlightPhysics = new Function(
 );
 const flightPhysics = makeFlightPhysics(
   THREE, state, activeAircraft, keys, ui, $, document, aircraft,
-  activeWeather, weatherProfiles, obstacles, saved, 41000, 3.69, 8,
+  activeWeather, weatherProfiles, obstacles, saved, activeAircraft.ceiling, 3.69, 8,
   runwayApproachGeometry, () => null, setGear, noop, noop, noop, noop,
   nearestRunway, crash, data => reports.push(data), noop, noop, noop,
   () => true, { now: () => state.flightSeconds * 1000 }, 0, meters => meters * 8 / 1000, damp,
