@@ -63,6 +63,7 @@ const state = {
   temperature: 15, cg: 25, trim: 5, fmcPlan: null, conditionLever: 100,
   propRpm: 1020, bladePitch: 35, torque: activeAircraft.id === 'Q400' ? 70 : 0,
   q400Torque: activeAircraft.id === 'Q400' ? [70, 70] : [0, 0], reversePower: 0, engineYaw: 0,
+  propFeather: [false, false], failedEngine: null,
   itt: 650, nh: 90, nl: 85, icingLevel: 0, tas: 0, groundSpeed: 0, engineOverlimitTime: 0,
   baseZfw: activeAircraft.id === 'Q400' ? 22000 : 57000, payloadPassengers: activeAircraft.id === 'Q400' ? 70 : 174,
   x: 0, y: 3.69 + initialAltitude * .3048, z: 2050, weight: activeAircraft.id === 'Q400' ? 29000 : 65000,
@@ -77,8 +78,8 @@ const state = {
     watchTimer: 0, watchX: 0, watchZ: 2050, watchIas: activeAircraft.id === 'Q400' ? 220 : 250,
     recoveries: 0, gearRetracted: true,
   },
-  ap: { fd: true, at: true, lnav: true, vnav: true, heading: false, altitude: false, ap: true, app: false },
-  targets: { speed: activeAircraft.id === 'Q400' ? 220 : 250, heading: 0, altitude: initialAltitude },
+  ap: { fd: true, at: true, lnav: true, vnav: true, heading: false, altitude: false, vs: false, ap: true, app: false },
+  targets: { speed: activeAircraft.id === 'Q400' ? 220 : 250, heading: 0, altitude: initialAltitude, vs: 0 },
 };
 const keys = {};
 const ui = { speedbrake: element(), flaps: element(), throttle: element(), gear: element() };
@@ -116,7 +117,7 @@ const makeFlightPhysics = new Function(
   'crash', 'showLandingReport', 'updateCurrentAirportLabel', 'saveCareer',
   'maybeFailure', 'onAirportPavement', 'performance', 'collisionWarningTimer',
   'displayDistanceKm', 'damp', 'warningTimer', 'engineGain', 'engineNoiseGain', 'engineOsc',
-  'pointOnFinal', 'aircraftSystemStatus', 'readGamepad', 'disconnectAutopilot', 'updateFlightExperience', 'speakCallout', 'consumeFuel',
+  'pointOnFinal', 'aircraftSystemStatus', 'readGamepad', 'disconnectAutopilot', 'updateFlightExperience', 'speakCallout', 'consumeFuel', 'syncFeatherButtons',
   `${flightPhysicsSource}; return flightPhysics;`,
 );
 const flightPhysics = makeFlightPhysics(
@@ -126,7 +127,7 @@ const flightPhysics = makeFlightPhysics(
   nearestRunway, crash, data => reports.push(data), noop, noop, noop,
   () => true, { now: () => state.flightSeconds * 1000 }, 0, meters => meters * 8 / 1000, damp,
   0, null, null, null,
-  runtimePointOnFinal, () => ({ transfer: true, hydA: true, hydB: true }), () => null, noop, noop, noop, () => true,
+  runtimePointOnFinal, () => ({ transfer: true, hydA: true, hydB: true }), () => null, noop, noop, noop, () => true, noop,
 );
 
 const DT = .04;

@@ -12,6 +12,7 @@ const state = {
   ias: 40, altitude: 0, heading: 0, onGround: true, throttle: -25,
   conditionLever: 100, engines: [60, 60], propRpm: 1020, bladePitch: 20,
   torque: 0, q400Torque: [0, 0], reversePower: 0, engineYaw: 0,
+  propFeather: [false, false], failedEngine: null,
   itt: 15, nh: 0, nl: 0, temperature: 15, icingLevel: 0, engineOverlimitTime: 0,
 };
 const activeAircraft = { id: 'Q400' };
@@ -20,8 +21,8 @@ const ui = { throttle: { value: 0 } };
 const saved = { aircraftCondition: { Q400: 100 } };
 let icingRisk = false, protectedFromIce = false;
 const aircraftSystemStatus = () => ({ icingRisk, iceProtected: protectedFromIce });
-const factory = new Function('THREE', 'state', 'activeAircraft', 'activeWeather', 'aircraftSystemStatus', 'damp', 'ui', 'saved', 'performance', 'warningTimer', 'toast', 'warningTone', `${source.slice(start, end)}; return updateQ400Powerplant;`);
-const update = factory(THREE, state, activeAircraft, activeWeather, aircraftSystemStatus, damp, ui, saved, { now: () => 0 }, 0, () => {}, () => {});
+const factory = new Function('THREE', 'state', 'activeAircraft', 'activeWeather', 'aircraftSystemStatus', 'damp', 'ui', 'saved', 'performance', 'warningTimer', 'toast', 'warningTone', 'syncFeatherButtons', `${source.slice(start, end)}; return updateQ400Powerplant;`);
+const update = factory(THREE, state, activeAircraft, activeWeather, aircraftSystemStatus, damp, ui, saved, { now: () => 0 }, 0, () => {}, () => {}, () => {});
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
 update(.1, 1, 1);
