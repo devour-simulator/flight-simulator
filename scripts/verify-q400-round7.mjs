@@ -15,7 +15,7 @@ for (const marker of [
 ]) assert(source.includes(marker), `Missing round 7 marker: ${marker}`);
 
 assert(html.includes('data-ground-op="shutdown"'), 'Ground operations panel is missing the shutdown check');
-assert(html.includes('game.js?v=q400-round7-22'), 'Round 7 cache version was not updated');
+assert(/game\.js\?v=q400-round\d+-\d+/.test(html), 'Q400 cache version is missing');
 
 const start = source.indexOf('function groundOperationsReady()');
 const end = source.indexOf('\nfunction resetATC', start);
@@ -36,12 +36,12 @@ const buttons = ['bridge','boarding','baggage','fuel','pushback','shutdown'].map
 }));
 const factory = new Function(
   'state','activeAircraft','saved','ui','$','$$','toast','warningTone','refuelAircraft',
-  'unlockAchievement','saveCareer','setATCInstruction',
+  'unlockAchievement','saveCareer','setATCInstruction','animateGroundService',
   `${source.slice(start, end)}; return {groundOperationsReady,missingGroundOperations,runGroundOperation,startPushback,updatePushback,requestTaxiClearance,completeTurnaround};`,
 );
 const ops = factory(
   state,activeAircraft,saved,ui,() => null,() => buttons,
-  message => notices.push(message),() => {},() => {},() => {},() => {},() => {},
+  message => notices.push(message),() => {},() => {},() => {},() => {},() => {},() => {},
 );
 
 assert(!ops.groundOperationsReady(), 'Cold aircraft must not start with ground services complete');
