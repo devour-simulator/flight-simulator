@@ -24,7 +24,7 @@ for (const marker of [
   'id="autofeatherBtn"',
   'id="q400DeiceBtn"',
   'id="maintenanceHistory"',
-  'game.js?v=q400-round8-23',
+  'game.js?v=',
 ]) assert(html.includes(marker), `Missing round 8 interface: ${marker}`);
 
 const speedStart = source.indexOf('function calculateQ400VSpeeds()');

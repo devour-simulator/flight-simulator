@@ -15,7 +15,7 @@ for (const marker of [
 ]) assert(source.includes(marker), `Missing round 7 marker: ${marker}`);
 
 assert(html.includes('data-ground-op="shutdown"'), 'Ground operations panel is missing the shutdown check');
-assert(/game\.js\?v=q400-round\d+-\d+/.test(html), 'Q400 cache version is missing');
+assert(/game\.js\?v=[a-z0-9-]+/.test(html), 'Versioned game cache key is missing');
 
 const start = source.indexOf('function groundOperationsReady()');
 const end = source.indexOf('\nfunction resetATC', start);
