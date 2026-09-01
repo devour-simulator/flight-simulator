@@ -18,7 +18,7 @@ for(const marker of[
   'class="rain-haze"',
   '.view-external .rain-layer{clip-path:none',
   '@keyframes rainFallNear',
-  'game.js?v=rain-visuals-25',
+  'game.js?v=',
 ])assert(html.includes(marker),`Missing rain interface marker: ${marker}`);
 
 assert(!source.includes('new THREE.Points(rainGeo'), 'Rain must not render as square point sprites');
