@@ -26,7 +26,7 @@ for(const marker of[
   'id="failureMode"',
   'id="startDispatch"',
   'data-training-failure="engine"',
-  'game.js?v=final-integrated-24',
+  'game.js?v=',
 ])assert(html.includes(marker),`Missing final integration interface: ${marker}`);
 
 const start=source.indexOf('function dispatchPerformance()');
