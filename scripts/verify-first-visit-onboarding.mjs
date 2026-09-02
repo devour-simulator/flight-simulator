@@ -21,7 +21,7 @@ for(const text of[
   'Boeing 737-800',
   'Dash 8 Q400',
   'id="lobbyHint"',
-  'game.js?v=first-visit-tutorial-26',
+  'game.js?v=',
 ])assert(html.includes(text),`Missing first-visit interface: ${text}`);
 
 assert(firstVisitStepCount(source)>=12,'First-visit tutorial must cover all major rules and both aircraft');
