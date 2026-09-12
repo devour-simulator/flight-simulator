@@ -19,7 +19,7 @@ for(const marker of[
 
 for(const marker of[
   '.atis-strip{',
-  'game.js?v=weather-operations-27',
+  'game.js?v=',
 ])assert(html.includes(marker),`Missing weather operations interface: ${marker}`);
 
 assert((source.match(/windDirection:/g)||[]).length>=6,'Every weather profile needs a wind direction');

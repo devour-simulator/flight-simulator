@@ -20,11 +20,11 @@ assert(bank.formatMoney(2000000000000) === '¥2T', 'T currency format is incorre
 assert(bank.borrowFromBank(60000000) === 50000000, 'Loan must be capped at 50M');
 assert(saved.loanPrincipal === 50000000 && saved.credits === 68000000, 'Loan proceeds or principal is incorrect');
 assert(bank.borrowFromBank(10000000) === 0, 'Additional borrowing over the credit limit must be rejected');
-assert(bank.accrueLoanInterest() === 500000, 'Per-flight interest must be 1% of principal');
-assert(saved.loanInterest === 500000, 'Accrued interest was not saved');
+assert(bank.accrueLoanInterest() === 75000, 'Per-flight interest must be 0.15% of principal');
+assert(saved.loanInterest === 75000, 'Accrued interest was not saved');
 assert(bank.repayBank(10000000) === 10000000, 'Partial repayment failed');
-assert(saved.loanInterest === 0 && saved.loanPrincipal === 40500000, 'Repayment must pay interest before principal');
-assert(bank.repayBank(Infinity) === 40500000 && bank.totalLoanDebt() === 0, 'Full repayment failed');
+assert(saved.loanInterest === 0 && saved.loanPrincipal === 40075000, 'Repayment must pay interest before principal');
+assert(bank.repayBank(Infinity) === 40075000 && bank.totalLoanDebt() === 0, 'Full repayment failed');
 
 assert(source.includes("price:220000000,usedPrice:50000000"), 'Q400 new and used prices are incorrect');
 assert(source.includes("saved.aircraftCondition[id]=used?72:100"), 'Used Q400 must start with reduced condition');
