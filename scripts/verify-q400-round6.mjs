@@ -27,7 +27,7 @@ assert(saved.loanInterest === 0 && saved.loanPrincipal === 40075000, 'Repayment 
 assert(bank.repayBank(Infinity) === 40075000 && bank.totalLoanDebt() === 0, 'Full repayment failed');
 
 assert(source.includes("price:220000000,usedPrice:50000000"), 'Q400 new and used prices are incorrect');
-assert(source.includes("saved.aircraftCondition[id]=used?72:100"), 'Used Q400 must start with reduced condition');
+assert(source.includes('saved.aircraftCondition[id]=condition;saved.aircraftMaxCondition[id]=condition'), 'Used aircraft condition must become its permanent repair ceiling');
 assert(source.includes('data.loanInterest=accrueLoanInterest()'), 'Commercial flights must accrue loan interest');
 assert(source.includes('storedRecords.credits*1000'), 'Legacy credits must migrate into the new economy scale');
 
