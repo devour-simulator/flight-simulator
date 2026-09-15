@@ -12,7 +12,7 @@ assert.match(html, /data-market-tab="new"[^>]*>全新飞机</);
 assert.match(html, /data-market-tab="used"[^>]*>二手飞机</);
 assert.match(html, /id="marketBank"/);
 assert.match(html, /id="refreshUsedAircraft"/);
-assert.match(html, /game\.js\?v=variable-used-wear-31/);
+assert.match(html, /game\.js\?v=career-contracts-33/);
 
 assert.match(game, /B738:\{[^\n]*price:650000000,usedPrice:180000000/);
 assert.match(game, /Q400:\{[^\n]*price:220000000,usedPrice:50000000/);

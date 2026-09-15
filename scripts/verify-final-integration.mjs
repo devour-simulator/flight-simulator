@@ -33,7 +33,7 @@ const start=source.indexOf('function dispatchPerformance()');
 const end=source.indexOf('\nfunction flightHealthCards()',start);
 assert(start>=0&&end>start,'Dispatch performance function must be extractable');
 const state={x:0,z:0,baseZfw:22000,fuel:3500,weight:25500};
-const aircraft={id:'Q400',ceiling:25000,approachSpeed:112};
+const aircraft={id:'Q400',turboprop:true,ceiling:25000,approachSpeed:112,cruiseSpeed:310,cruiseAltitude:22000,burnPerHour:900,fuelCapacity:4200,reserveFuel:600,zfw:22000,maxWeight:29200,runwayBase:3900,runwayWeight:1500};
 const airport={code:'TST',x:10000,z:0,runways:[{id:'09',lengthFt:6200}]};
 const factory=new Function('state','activeAircraft','activeWeather','selectedAirport','$','runwayWindComponents','displayDistanceKm','THREE','calculateQ400VSpeeds','fmcSpeeds',`${source.slice(start,end)};return dispatchPerformance;`);
 const calculate=factory(state,aircraft,{rain:0,gust:4},()=>airport,selector=>({value:selector==='#runwaySelect'?'09':''}),()=>({direction:90,headwind:4,crosswind:0,gustCrosswind:0,limit:32,withinLimit:true}),meters=>meters*8/1000,{MathUtils:{clamp:(value,min,max)=>Math.max(min,Math.min(max,value))}},()=>({v1:90,vr:94,v2:102,vref:113}),()=>({v1:130,vr:135,v2:142}));

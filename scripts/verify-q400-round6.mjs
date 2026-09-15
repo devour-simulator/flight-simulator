@@ -5,9 +5,9 @@ const start = source.indexOf('const BANK_CREDIT_LIMIT');
 const end = source.indexOf('\nfunction beginFlightMetrics', start);
 if (start < 0 || end < 0) throw new Error('Unable to extract airline bank system');
 
-const saved = { credits: 18000000, loanPrincipal: 0, loanInterest: 0 };
+const saved = { credits: 18000000, loanPrincipal: 0, loanInterest: 0, gameMinute: 540, loanDaysRemaining: 0, loanTermDays: 0, loanDailyPrincipal: 0, lastLoanPaymentDay: 0, missedLoanPayments: 0 };
 const notices = [];
-const factory = new Function('saved', 'saveCareer', 'careerMarkup', 'toast', 'warningTone', '$', '$$', `${source.slice(start, end)}; return {formatMoney,totalLoanDebt,borrowFromBank,repayBank,accrueLoanInterest,BANK_CREDIT_LIMIT};`);
+const factory = new Function('saved', 'saveCareer', 'careerMarkup', 'toast', 'warningTone', '$', '$$', `${source.slice(start, end)}; return {formatMoney,totalLoanDebt,borrowFromBank,repayBank,accrueLoanInterest,processDailyLoanPayment,BANK_CREDIT_LIMIT};`);
 const bank = factory(saved, () => {}, () => {}, message => notices.push(message), () => {}, () => null, () => []);
 
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -20,15 +20,20 @@ assert(bank.formatMoney(2000000000000) === '¥2T', 'T currency format is incorre
 assert(bank.borrowFromBank(60000000) === 50000000, 'Loan must be capped at 50M');
 assert(saved.loanPrincipal === 50000000 && saved.credits === 68000000, 'Loan proceeds or principal is incorrect');
 assert(bank.borrowFromBank(10000000) === 0, 'Additional borrowing over the credit limit must be rejected');
-assert(bank.accrueLoanInterest() === 75000, 'Per-flight interest must be 0.15% of principal');
-assert(saved.loanInterest === 75000, 'Accrued interest was not saved');
+assert(saved.loanDaysRemaining === 90 && saved.loanDailyPrincipal > 555000, '50M loan must use a 90-day repayment plan');
+assert(bank.accrueLoanInterest() === 0, 'Flights must not add interest outside the daily repayment schedule');
+const beforeDailyPayment = saved.credits;
+bank.processDailyLoanPayment(1);
+assert(saved.credits < beforeDailyPayment && saved.loanDaysRemaining === 89, 'Daily repayment must deduct the account and reduce remaining days');
+assert(saved.loanPrincipal < 50000000, 'Daily repayment must reduce principal');
 assert(bank.repayBank(10000000) === 10000000, 'Partial repayment failed');
-assert(saved.loanInterest === 0 && saved.loanPrincipal === 40075000, 'Repayment must pay interest before principal');
-assert(bank.repayBank(Infinity) === 40075000 && bank.totalLoanDebt() === 0, 'Full repayment failed');
+assert(saved.loanInterest === 0, 'Repayment must pay interest before principal');
+const remainingDebt = bank.totalLoanDebt();
+assert(bank.repayBank(Infinity) === remainingDebt && bank.totalLoanDebt() === 0, 'Full repayment failed');
 
 assert(source.includes("price:220000000,usedPrice:50000000"), 'Q400 new and used prices are incorrect');
 assert(source.includes('saved.aircraftCondition[id]=condition;saved.aircraftMaxCondition[id]=condition'), 'Used aircraft condition must become its permanent repair ceiling');
-assert(source.includes('data.loanInterest=accrueLoanInterest()'), 'Commercial flights must accrue loan interest');
+assert(source.includes('data.loanInterest=accrueLoanInterest()'), 'Flight settlement must preserve the compatibility field without double-charging interest');
 assert(source.includes('storedRecords.credits*1000'), 'Legacy credits must migrate into the new economy scale');
 
 console.log('Q400 round 6 compact currency, aircraft market and airline bank verified');

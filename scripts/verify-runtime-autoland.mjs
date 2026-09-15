@@ -23,8 +23,8 @@ const $ = selector => {
 const document = { documentElement: { style: { setProperty: noop } } };
 
 const aircraftProfiles = {
-  B738: { id: 'B738', short: 'B737-800', approachSpeed: 137, controlSpeed: 125, criticalAoa: 15, pitchResponse: 1, rollResponse: 1, yawResponse: 1, thrust: 1, drag: 1, lift: 1, fuelBurn: 1, rotateSpeed: 112, maxSpeed: 520, ceiling: 41000, gearLimit: 270 },
-  Q400: { id: 'Q400', short: 'Q400', approachSpeed: 112, controlSpeed: 94, criticalAoa: 17, pitchResponse: 1.35, rollResponse: 1.55, yawResponse: 1.45, thrust: .82, drag: 1.12, lift: 1.24, fuelBurn: .55, rotateSpeed: 88, maxSpeed: 360, ceiling: 25000, gearLimit: 250 },
+  B738: { id: 'B738', short: 'B737-800', approachSpeed: 137, controlSpeed: 125, criticalAoa: 15, pitchResponse: 1, rollResponse: 1, yawResponse: 1, thrust: 1, drag: 1, lift: 1, fuelBurn: 1, rotateSpeed: 112, autoRotateSpeed: 145, referenceWeight: 65000, zfw: 57000, maxWeight: 79000, maxSpeed: 520, ceiling: 41000, gearLimit: 270 },
+  Q400: { id: 'Q400', short: 'Q400', approachSpeed: 112, controlSpeed: 94, criticalAoa: 17, pitchResponse: 1.35, rollResponse: 1.55, yawResponse: 1.45, thrust: .82, drag: 1.12, lift: 1.24, fuelBurn: .55, rotateSpeed: 88, autoRotateSpeed: 105, referenceWeight: 29000, zfw: 22000, maxWeight: 29200, maxSpeed: 360, ceiling: 25000, gearLimit: 250, turboprop: true },
 };
 const airportData = {
   LGA: [35000, -50000, [90, 270]], SMA: [-52000, -65000, [40, 220]],
