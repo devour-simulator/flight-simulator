@@ -38,7 +38,7 @@ for(const marker of[
 const clockStart=game.indexOf('function gameCalendar(');
 const clockEnd=game.indexOf('\nfunction processDailyLoanPayment',clockStart);
 const clock=new Function('saved',`${game.slice(clockStart,clockEnd)};return {gameCalendar,formatGameTime};`)({gameMinute:540});
-assert.equal(clock.formatGameTime(540),'第1年 1月1日 星期一 09:00');
-assert.equal(clock.formatGameTime(1980),'第1年 1月2日 星期二 09:00');
+assert.equal(clock.formatGameTime(540),'1年 1月1日 星期一 09:00');
+assert.equal(clock.formatGameTime(1980),'1年 1月2日 星期二 09:00');
 
 console.log('Career modes, contract aircraft, game clock, company gate and daily loan UI verified.');
