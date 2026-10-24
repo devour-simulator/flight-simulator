@@ -9,5 +9,5 @@ assert.ok(source.includes("if(activeWeather.gust>12&&activeWeatherKey==='storm')
 assert.ok(source.includes('if(Math.abs(state.roll)>26){comfortLoss+='),'Actual excessive bank must still affect comfort');
 assert.ok(source.includes('if(rollRate>18){comfortLoss+='),'Actual abrupt roll must still affect comfort');
 assert.ok(source.includes('if(verticalJolt>520){comfortLoss+='),'Actual vertical jolts must still affect comfort');
-assert.ok(html.includes('game.js?v=weather-comfort-37'),'Weather comfort cache version is missing');
+assert.ok(html.includes('game.js?v=atc-release-38'),'ATC release cache version is missing');
 console.log('Wind no longer passively drains passenger comfort.');

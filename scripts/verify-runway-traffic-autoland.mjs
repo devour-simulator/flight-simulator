@@ -5,7 +5,7 @@ const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const assert=(condition,message)=>{if(!condition)throw new Error(message)};
 
 for(const marker of[
-  'trafficOps={clock:0,lastRunwayUse:new Map(),movements:0}',
+  'trafficOps={clock:0,lastRunwayUse:new Map(),movements:0,playerReservation:null}',
   "phase=i%3===0?'TAXI':i%3===1?'PARKED':'HOLDING'",
   'function runwayTrafficStatus(',
   'function runwayAvailableForTraffic(',
@@ -21,7 +21,7 @@ for(const marker of[
   '已建立复飞航路',
 ])assert(source.includes(marker),`Missing runway traffic/autoland behavior: ${marker}`);
 
-assert(html.includes('game.js?v=weather-comfort-37'),'Weather comfort cache version is missing');
+assert(html.includes('game.js?v=atc-release-38'),'ATC release cache version is missing');
 
 const trafficStart=source.indexOf('function runwayTrafficStatus(');
 const trafficEnd=source.indexOf('\nfunction runwayAvailableForTraffic',trafficStart);
