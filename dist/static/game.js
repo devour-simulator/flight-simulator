@@ -249,7 +249,7 @@ function updateFlightExperience(dt){
     if(rollRate>18){comfortLoss+=(rollRate-18)*.012*dt;hazard=true}
     if(pitchRate>10){comfortLoss+=(pitchRate-10)*.012*dt;hazard=true}
     if(verticalJolt>520){comfortLoss+=Math.min(.8,(verticalJolt-520)/1200)*dt;hazard=true}
-    if(activeWeather.gust>12){comfortLoss+=(activeWeather.gust-12)*.0006*dt;if(activeWeatherKey==='storm')safetyLoss+=.008*dt}
+    if(activeWeather.gust>12&&activeWeatherKey==='storm')safetyLoss+=.008*dt
     if(state.gearDamaged){safetyLoss+=.22*dt;damage+=.035*dt;hazard=true}
     if(!hazard&&Math.abs(state.roll)<15&&Math.abs(state.aoa)<state.criticalAoa-4){m.smoothSeconds+=dt;m.comfort=Math.min(100,m.comfort+.065*dt)}
   }
