@@ -21,7 +21,7 @@ for(const marker of[
   '已建立复飞航路',
 ])assert(source.includes(marker),`Missing runway traffic/autoland behavior: ${marker}`);
 
-assert(html.includes('game.js?v=scheduled-priority-39'),'Scheduled departure priority cache version is missing');
+assert(html.includes('game.js?v=wind-comfort-40'),'Wind comfort cache version is missing');
 
 const trafficStart=source.indexOf('function runwayTrafficStatus(');
 const trafficEnd=source.indexOf('\nfunction runwayAvailableForTraffic',trafficStart);

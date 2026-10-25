@@ -245,10 +245,11 @@ function updateFlightExperience(dt){
     m.airborneSeconds+=dt;if(state.gearPosition>.5)m.gearDownAirborneSeconds+=dt;
     if(state.stallSeverity>.04||state.aoa>=state.criticalAoa){const severity=Math.max(.25,state.stallSeverity);comfortLoss+=(2.8+severity*4.2)*dt;safetyLoss+=(3.5+severity*5)*dt;damage+=severity*.22*dt;m.stallSeconds+=dt;hazard=true}
     if(state.ias>activeAircraft.passengerOverspeed){const excess=(state.ias-activeAircraft.passengerOverspeed)/60;comfortLoss+=(.55+excess*.9)*dt;safetyLoss+=(.8+excess*1.4)*dt;damage+=excess*.045*dt;m.overspeedSeconds+=dt;hazard=true}
-    if(Math.abs(state.roll)>26){comfortLoss+=(Math.abs(state.roll)-26)*.012*dt;hazard=true}
-    if(rollRate>18){comfortLoss+=(rollRate-18)*.012*dt;hazard=true}
-    if(pitchRate>10){comfortLoss+=(pitchRate-10)*.012*dt;hazard=true}
-    if(verticalJolt>520){comfortLoss+=Math.min(.8,(verticalJolt-520)/1200)*dt;hazard=true}
+    const windComfortProtected=activeWeatherKey==='wind';
+    if(!windComfortProtected&&Math.abs(state.roll)>26){comfortLoss+=(Math.abs(state.roll)-26)*.012*dt;hazard=true}
+    if(!windComfortProtected&&rollRate>18){comfortLoss+=(rollRate-18)*.012*dt;hazard=true}
+    if(!windComfortProtected&&pitchRate>10){comfortLoss+=(pitchRate-10)*.012*dt;hazard=true}
+    if(!windComfortProtected&&verticalJolt>520){comfortLoss+=Math.min(.8,(verticalJolt-520)/1200)*dt;hazard=true}
     if(activeWeather.gust>12&&activeWeatherKey==='storm')safetyLoss+=.008*dt
     if(state.gearDamaged){safetyLoss+=.22*dt;damage+=.035*dt;hazard=true}
     if(!hazard&&Math.abs(state.roll)<15&&Math.abs(state.aoa)<state.criticalAoa-4){m.smoothSeconds+=dt;m.comfort=Math.min(100,m.comfort+.065*dt)}

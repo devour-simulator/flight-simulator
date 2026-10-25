@@ -25,7 +25,7 @@ for(const marker of[
   'data-nav-view="route"',
   '前方导航',
   '完整航线',
-  'game.js?v=scheduled-priority-39'
+  'game.js?v=wind-comfort-40'
 ]) assert.ok(html.includes(marker),`Missing navigation UI marker: ${marker}`);
 
 assert.match(source,/destination\?\.code===ap\.code&&r\.id===runwayId/);
