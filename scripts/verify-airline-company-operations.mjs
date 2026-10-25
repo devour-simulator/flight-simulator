@@ -22,5 +22,5 @@ for(const marker of[
 
 assert.match(source,/Math\.min\(saved\.hiredPilots\|\|0,airlinePilotCapacity\(\),Math\.max\(0,saved\.ownedAircraft\.length-1\)\)/);
 assert.match(html,/\.company-operations\{/);
-assert.match(html,/game\.js\?v=atc-release-38/);
+assert.match(html,/game\.js\?v=scheduled-priority-39/);
 console.log('Airline company operations verification passed.');

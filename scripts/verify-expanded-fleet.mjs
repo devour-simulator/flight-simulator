@@ -25,6 +25,6 @@ assert.match(game,/state\.weight=profile\.referenceWeight/);
 assert.match(game,/const autoRotateSpeed=activeAircraft\.autoRotateSpeed/);
 assert.match(game,/referenceWeight=activeAircraft\.referenceWeight/);
 assert.match(game,/recommendedSpeed:Math\.min\(activeAircraft\.cruiseSpeed/);
-assert.match(html,/game\.js\?v=atc-release-38/);
+assert.match(html,/game\.js\?v=scheduled-priority-39/);
 
 console.log('Expanded seven-aircraft fleet, market cards and profile-specific flight data verified.');
