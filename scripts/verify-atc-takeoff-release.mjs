@@ -16,5 +16,5 @@ for(const marker of[
   '!playerReserved'
 ])assert.ok(source.includes(marker),`Missing automatic ATC release behavior: ${marker}`);
 
-assert.ok(html.includes('game.js?v=wind-comfort-40'),'Wind comfort cache version is missing');
+assert.ok(html.includes('game.js?v=parking-guidance-41'),'Parking guidance cache version is missing');
 console.log('Scheduled flights receive immediate ATC priority; early flights retain the automatic queue.');

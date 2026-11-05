@@ -25,7 +25,7 @@ const state = {
   ready:false,simpleMode:false,onGround:true,ias:0,z:2050,heading:0,throttle:0,
   jetbridgeServiced:false,jetbridgeConnected:false,boardingComplete:false,
   baggageComplete:false,fuelingComplete:false,pushbackTimer:0,pushbackComplete:false,
-  turnaroundComplete:false,landingRollout:null,conditionLever:0,engines:[0,0],beacon:false,
+  turnaroundComplete:false,landingRollout:null,landingCompleted:false,parkingStandId:'YHI-P1',parkingDistance:0,conditionLever:0,engines:[0,0],beacon:false,
 };
 const activeAircraft = { id:'Q400' };
 const saved = { completedTurnarounds:0, careerXP:0 };
@@ -36,12 +36,12 @@ const buttons = ['bridge','boarding','baggage','fuel','pushback','shutdown'].map
 }));
 const factory = new Function(
   'state','activeAircraft','saved','ui','$','$$','toast','warningTone','refuelAircraft',
-  'unlockAchievement','saveCareer','setATCInstruction','animateGroundService',
+  'unlockAchievement','saveCareer','setATCInstruction','animateGroundService','activeParkingStand','assignParkingStand',
   `${source.slice(start, end)}; return {groundOperationsReady,missingGroundOperations,runGroundOperation,startPushback,updatePushback,requestTaxiClearance,completeTurnaround};`,
 );
 const ops = factory(
   state,activeAircraft,saved,ui,() => null,() => buttons,
-  message => notices.push(message),() => {},() => {},() => {},() => {},() => {},() => {},
+  message => notices.push(message),() => {},() => {},() => {},() => {},() => {},() => {},()=>({id:'P1'}),()=>({id:'P1'}),
 );
 
 assert(!ops.groundOperationsReady(), 'Cold aircraft must not start with ground services complete');
@@ -59,7 +59,7 @@ ops.updatePushback(7);
 assert(state.pushbackComplete && state.pushbackTimer === 0, 'Pushback completion must persist for the checklist');
 
 assert(ops.completeTurnaround() === false, 'Shutdown must not complete before a landing');
-state.landingRollout = {};
+state.landingCompleted = true;
 assert(ops.completeTurnaround() === true, 'A stopped Q400 with condition levers at fuel off must complete shutdown');
 assert(saved.completedTurnarounds === 1 && saved.careerXP === 15, 'Completed turnaround reward is incorrect');
 
