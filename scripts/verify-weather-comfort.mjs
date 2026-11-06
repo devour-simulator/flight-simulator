@@ -13,5 +13,5 @@ assert.ok(source.includes('if(!windComfortProtected&&pitchRate>10){comfortLoss+=
 assert.ok(source.includes('if(!windComfortProtected&&verticalJolt>520){comfortLoss+='),'Wind-induced vertical jolts must not reduce comfort');
 assert.ok(source.includes('if(state.stallSeverity>.04||state.aoa>=state.criticalAoa)'),'Stall must still reduce comfort');
 assert.ok(source.includes('if(state.ias>activeAircraft.passengerOverspeed)'),'Overspeed must still reduce comfort');
-assert.ok(html.includes('game.js?v=parking-guidance-41'),'Parking guidance cache version is missing');
+assert.ok(html.includes('game.js?v=traffic-fleet-42'),'Traffic fleet cache version is missing');
 console.log('Strong wind and its unavoidable motion no longer reduce passenger comfort.');
