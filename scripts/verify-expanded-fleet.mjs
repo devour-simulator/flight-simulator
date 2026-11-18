@@ -25,6 +25,6 @@ assert.match(game,/state\.weight=profile\.referenceWeight/);
 assert.match(game,/const autoRotateSpeed=activeAircraft\.autoRotateSpeed/);
 assert.match(game,/referenceWeight=activeAircraft\.referenceWeight/);
 assert.match(game,/recommendedSpeed:Math\.min\(activeAircraft\.cruiseSpeed/);
-assert.match(html,/game\.js\?v=combat-radar-45/);
+assert.match(html,/game\.js\?v=combat-dogfight-46/);
 
 console.log('Expanded seven-aircraft fleet, market cards and profile-specific flight data verified.');
