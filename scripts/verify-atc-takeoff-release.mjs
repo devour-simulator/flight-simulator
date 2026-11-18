@@ -16,5 +16,5 @@ for(const marker of[
   '!playerReserved'
 ])assert.ok(source.includes(marker),`Missing automatic ATC release behavior: ${marker}`);
 
-assert.ok(html.includes('game.js?v=combat-mouse-44'),'Combat mouse cache version is missing');
+assert.ok(html.includes('game.js?v=combat-radar-45'),'Combat radar cache version is missing');
 console.log('Scheduled flights receive immediate ATC priority; early flights retain the automatic queue.');

@@ -10,6 +10,6 @@ try{
   await page.waitForTimeout(2500);
   if(errors.length)throw new Error(`Page errors: ${errors.join(' | ')}`);
   const result=await page.evaluate(()=>({canvas:!!document.querySelector('#world canvas'),version:document.querySelector('script[src*="game.js"]')?.getAttribute('src')||''}));
-  if(!result.canvas||!result.version.includes('combat-mouse-44'))throw new Error(`Traffic fleet page did not initialize: ${JSON.stringify(result)}`);
+  if(!result.canvas||!result.version.includes('combat-radar-45'))throw new Error(`Traffic fleet page did not initialize: ${JSON.stringify(result)}`);
   console.log('Browser initialized the detailed NPC traffic fleet without runtime errors');
 }finally{await browser.close()}

@@ -20,7 +20,7 @@ for(const marker of[
   'id="parkingGuideTitle"',
   'id="parkingGuideDirection"',
   '.parking-guide.show',
-  'game.js?v=combat-mouse-44',
+  'game.js?v=combat-radar-45',
 ])assert(html.includes(marker),`Missing parking UI marker: ${marker}`);
 
 const localStandCount=(source.match(/registerParkingStand\(runway,ap,/g)||[]).length;

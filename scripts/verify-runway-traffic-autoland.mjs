@@ -21,7 +21,7 @@ for(const marker of[
   '已建立复飞航路',
 ])assert(source.includes(marker),`Missing runway traffic/autoland behavior: ${marker}`);
 
-assert(html.includes('game.js?v=combat-mouse-44'),'Combat mouse cache version is missing');
+assert(html.includes('game.js?v=combat-radar-45'),'Combat radar cache version is missing');
 
 const trafficStart=source.indexOf('function runwayTrafficStatus(');
 const trafficEnd=source.indexOf('\nfunction runwayAvailableForTraffic',trafficStart);

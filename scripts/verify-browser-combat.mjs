@@ -18,9 +18,9 @@ try{
   await page.keyboard.up('Space');
   await page.keyboard.press('Shift+W');
   await page.waitForTimeout(1200);
-  const result=await page.evaluate(()=>({canvas:!!document.querySelector('#world canvas'),mouseLocked:document.pointerLockElement===document.querySelector('#world canvas'),mouseHint:document.querySelector('#combatMouseHint')?.textContent,wave:document.querySelector('#combatWave')?.textContent,enemies:document.querySelector('#combatEnemies')?.textContent,health:document.querySelector('#combatHealthText')?.textContent,model:document.querySelector('#modelName')?.textContent}));
+  const result=await page.evaluate(()=>{const radar=document.querySelector('#combatRadar'),radarPixels=radar?.getContext('2d').getImageData(0,0,radar.width,radar.height).data;return{canvas:!!document.querySelector('#world canvas'),radar:!!radar,radarDrawn:radarPixels?[...radarPixels].some(value=>value>0):false,autoLock:document.querySelector('#combatTarget')?.textContent,mouseLocked:document.pointerLockElement===document.querySelector('#world canvas'),mouseHint:document.querySelector('#combatMouseHint')?.textContent,wave:document.querySelector('#combatWave')?.textContent,enemies:document.querySelector('#combatEnemies')?.textContent,health:document.querySelector('#combatHealthText')?.textContent,model:document.querySelector('#modelName')?.textContent}});
   if(process.env.COMBAT_SCREENSHOT)await page.screenshot({path:process.env.COMBAT_SCREENSHOT,fullPage:true});
   if(errors.length)throw new Error(`Page errors: ${errors.join(' | ')}`);
-  if(!result.canvas||!result.mouseLocked||result.model!=='XF-27 SHADOW'||Number(result.enemies)<1)throw new Error(`Combat mode did not initialize: ${JSON.stringify(result)}`);
+  if(!result.canvas||!result.radar||!result.radarDrawn||!result.autoLock?.includes('AUTO LOCK')||!result.mouseLocked||result.model!=='XF-27 SHADOW'||Number(result.enemies)<1)throw new Error(`Combat mode did not initialize: ${JSON.stringify(result)}`);
   console.log(`Combat browser test passed: ${JSON.stringify(result)}`);
 }finally{await browser.close()}
