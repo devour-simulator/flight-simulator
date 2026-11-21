@@ -23,6 +23,6 @@ assert(source.includes('t.parkingStandKey=stand.key'),'Parked traffic must use m
 assert(source.includes("stand.key!==state.parkingStandId"),'NPC traffic must leave the player-assigned stand free');
 assert(source.includes('spec.turboprop?')&&source.includes('blade<6'),'Q400 traffic must have six-blade propellers');
 assert(source.includes('spec.widebody?27'),'Widebody traffic needs a larger collision envelope');
-assert(html.includes('game.js?v=combat-dogfight-46'),'Combat dogfight cache key is missing');
+assert(html.includes('game.js?v=combat-missions-47'),'Combat missions cache key is missing');
 
 console.log('Seven detailed NPC aircraft types, animated engines, gear, lights and parking stands verified');
